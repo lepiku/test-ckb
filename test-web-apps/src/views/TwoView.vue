@@ -1,27 +1,21 @@
 <script setup>
 import { reactive } from 'vue'
-import {
-  BCard,
-  BForm,
-  BButton,
-  BFormInput,
-  BFormGroup,
-} from 'bootstrap-vue'
+import { BCard, BForm, BButton, BFormInput, BFormGroup } from 'bootstrap-vue'
 const formMahasiswa = reactive({
   nim: '',
   nama_mahasiswa: '',
-  jurusan: '',
+  jurusan: ''
 })
 const formMataKuliah = reactive({
   kode_mata_kuliah: '',
   nama_mata_kuliah: '',
-  sks: 0,
+  sks: 0
 })
 const formNilaiMahasiswa = reactive({
   nim: '',
   kode_mata_kuliah: '',
   tugas: 0,
-  uas: 0,
+  uas: 0
 })
 const form = {
   mahasiswa: {
@@ -30,7 +24,7 @@ const form = {
     fields: [
       { name: 'nim', maxlength: 50 },
       { name: 'nama_mahasiswa', maxlength: 50 },
-      { name: 'jurusan', maxlength: 50 },
+      { name: 'jurusan', maxlength: 50 }
     ],
     onSubmit(event) {
       event.preventDefault()
@@ -43,7 +37,7 @@ const form = {
     fields: [
       { name: 'kode_mata_kuliah', maxlength: 50 },
       { name: 'nama_mata_kuliah', maxlength: 50 },
-      { name: 'sks', type: 'number' },
+      { name: 'sks', type: 'number' }
     ],
     onSubmit(event) {
       event.preventDefault()
@@ -57,13 +51,13 @@ const form = {
       { name: 'nim', maxlength: 50 },
       { name: 'kode_mata_kuliah', maxlength: 50 },
       { name: 'tugas', type: 'number' },
-      { name: 'uas', type: 'number' },
+      { name: 'uas', type: 'number' }
     ],
     onSubmit(event) {
       event.preventDefault()
       alert(JSON.stringify(formNilaiMahasiswa))
     }
-  },
+  }
 }
 </script>
 
@@ -77,13 +71,9 @@ const form = {
         :header="f.title"
         class="m-2"
       >
-        <b-form
-          @submit="f.onSubmit"
-          class="mb-4"
-        >
-
+        <b-form @submit="f.onSubmit" class="mb-4">
           <b-form-group
-            v-for="field in f.fields" 
+            v-for="field in f.fields"
             :key="field.name"
             :id="`input-group-${field.name}`"
             :label="field.name"
@@ -99,10 +89,11 @@ const form = {
             />
           </b-form-group>
 
-          <b-button type="submit" variant="primary" class="mt-2">Submit</b-button>
+          <b-button type="submit" variant="primary" class="mt-2"
+            >Submit</b-button
+          >
         </b-form>
       </b-card>
-      
 
       <!-- <b-card class="mt-3" header="Form Data Result">
         <pre class="m-0">{{ form }}</pre>
@@ -111,6 +102,4 @@ const form = {
   </main>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
