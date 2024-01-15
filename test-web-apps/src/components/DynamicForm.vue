@@ -9,29 +9,19 @@ import {
 } from 'bootstrap-vue'
 import { reactive, nextTick, ref } from 'vue'
 import { getLabel } from '@/utils'
-import $ from 'jquery'
 
-const props = defineProps([
-  'fields',
-  'initialValues',
-  'submitUrl',
-  'submitMethod'
-])
-const emit = defineEmits(['refetch'])
+const props = defineProps(['fields', 'initialValues', 'onSubmit', 'onReset'])
 
 const model = reactive({ ...props.initialValues })
-
-const onSubmit = async () => {
-  await $.ajax({
-    method: props.submitMethod,
-    url: props.submitUrl,
-    data: model
-  })
-  onReset()
-  emit('refetch')
-}
 const show = ref(true)
-const onReset = () => {
+
+const onFormSubmit = async () => {
+  if (await props.onSubmit({ ...model })) {
+    onFormReset()
+  }
+}
+const onFormReset = () => {
+  props.onReset()
   Object.assign(model, props.initialValues)
   show.value = false
   nextTick(() => {
@@ -43,8 +33,8 @@ const onReset = () => {
 <template>
   <b-form
     v-if="show"
-    @submit.prevent="onSubmit"
-    @reset.prevent="onReset"
+    @submit.prevent="onFormSubmit"
+    @reset.prevent="onFormReset"
     class="mb-4"
   >
     <b-form-group

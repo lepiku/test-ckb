@@ -6,19 +6,47 @@ import $ from 'jquery'
 import DynamicForm from '@/components/DynamicForm.vue'
 
 const data = ref([])
-const fetchData = async () => {
-  const result = await $.ajax({
-    url: 'http://localhost:8080/api/pengguna/'
+const errorMessage = ref(null)
+
+const fetchData = () => {
+  $.ajax({
+    url: 'http://localhost:8080/api/pengguna/',
+    success: (result) => {
+      data.value = result
+    }
   })
-  data.value = result
 }
-onMounted(fetchData)
+const onSubmit = (values) => {
+  errorMessage.value = null
+  return new Promise((resolve) => {
+    $.ajax({
+      method: 'post',
+      url: 'http://localhost:8080/api/pengguna/',
+      data: values,
+      success: () => {
+        fetchData()
+        resolve(true)
+      },
+      error: (err) => {
+        errorMessage.value = err.responseJSON.message
+        resolve(false)
+      }
+    })
+  })
+}
+const onReset = () => {
+  errorMessage.value = null
+}
 
 const deleteItem = (id) => {
+  errorMessage.value = null
   $.ajax({
     method: 'delete',
     url: `http://localhost:8080/api/pengguna/${id}/`,
-    success: fetchData
+    success: () => fetchData(),
+    error: (err) => {
+      errorMessage.value = err.responseJSON.message
+    }
   })
 }
 
@@ -36,20 +64,23 @@ const formProps = {
     nomor_telepon: '',
     jenis_kelamin: ''
   },
-  submitUrl: 'http://localhost:8080/api/pengguna/',
-  submitMethod: 'post'
+  onSubmit,
+  onReset
 }
 const table = [
   { name: 'id', label: 'ID', type: 'number', disabled: true },
   ...formProps.fields
 ]
+
+onMounted(() => fetchData())
 </script>
 
 <template>
   <b-container class="py-4">
     <h1 class="mb-4">Pendaftaran</h1>
 
-    <dynamic-form v-bind="formProps" @refetch="fetchData" />
+    <dynamic-form v-bind="formProps" />
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
     <b-container>
       <b-row>
@@ -81,5 +112,13 @@ const table = [
 }
 .b-icon {
   cursor: pointer;
+}
+.error-message {
+  padding: 4px;
+  background: red;
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  margin: 8px;
 }
 </style>

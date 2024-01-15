@@ -2,11 +2,16 @@ const db = require("../models");
 const Pengguna = db.pengguna;
 const Op = require("sequelize").Op;
 
-exports.create = (req, res) => {
-  console.log(req.body);
+exports.create = async (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!",
+    });
+    return;
+  }
+  if (await Pengguna.findOne({ where: { nama: req.body.nama } })) {
+    res.status(400).send({
+      message: "Nama tidak unik",
     });
     return;
   }
@@ -26,7 +31,7 @@ exports.create = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while creating the Tutorial.",
+          err.message || "Some error occurred while creating the Pengguna.",
       });
     });
 };
@@ -39,7 +44,7 @@ exports.findAll = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving tutorials.",
+          err.message || "Some error occurred while retrieving penggunas.",
       });
     });
 };
@@ -57,7 +62,7 @@ exports.delete = (req, res) => {
         });
       } else {
         res.send({
-          message: `Cannot delete Pengguna with id=${id}. Maybe Tutorial was not found!`,
+          message: `Cannot delete Pengguna with id=${id}. Maybe Pengguna was not found!`,
         });
       }
     })
