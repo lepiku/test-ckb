@@ -1,6 +1,5 @@
 const db = require("../models");
 const Pengguna = db.pengguna;
-const Op = require("sequelize").Op;
 
 exports.create = async (req, res) => {
   if (!req.body) {
@@ -49,7 +48,7 @@ exports.findAll = (req, res) => {
     });
 };
 
-exports.update = (req, res) => {};
+// exports.update = (req, res) => {};
 
 exports.delete = (req, res) => {
   const id = req.params.id;
