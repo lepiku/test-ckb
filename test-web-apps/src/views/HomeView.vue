@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getLabel } from '@/utils'
-import { BContainer, BRow, BCol } from 'bootstrap-vue'
+import { BContainer, BRow, BCol, BIconTrashFill } from 'bootstrap-vue'
 import $ from 'jquery'
 import DynamicForm from '@/components/DynamicForm.vue'
 
@@ -14,9 +14,16 @@ const fetchData = async () => {
 }
 onMounted(fetchData)
 
+const deleteItem = (id) => {
+  $.ajax({
+    method: 'delete',
+    url: `http://localhost:8080/api/pengguna/${id}/`,
+    success: fetchData
+  })
+}
+
 const formProps = {
   fields: [
-    { name: 'id', label: 'ID', type: 'number', disabled: true },
     { name: 'nama' },
     { name: 'alamat', type: 'textarea' },
     { name: 'nomor_telepon' },
@@ -32,6 +39,10 @@ const formProps = {
   submitUrl: 'http://localhost:8080/api/pengguna/',
   submitMethod: 'post'
 }
+const table = [
+  { name: 'id', label: 'ID', type: 'number', disabled: true },
+  ...formProps.fields
+]
 </script>
 
 <template>
@@ -42,17 +53,17 @@ const formProps = {
 
     <b-container>
       <b-row>
-        <b-col
-          v-for="field in formProps.fields"
-          :key="field.name"
-          class="cell text-bold"
-        >
+        <b-col v-for="field in table" :key="field.name" class="cell text-bold">
           {{ getLabel(field) }}
         </b-col>
+        <b-col class="cell text-bold"> Actions </b-col>
       </b-row>
       <b-row v-for="d in data" :key="d.id">
-        <b-col v-for="{ name } in formProps.fields" :key="name" class="cell">
+        <b-col v-for="{ name } in table" :key="name" class="cell">
           {{ d[name] }}
+        </b-col>
+        <b-col class="cell">
+          <b-icon-trash-fill variant="danger" @click="deleteItem(d.id)" />
         </b-col>
       </b-row>
     </b-container>
@@ -67,5 +78,8 @@ const formProps = {
   background-color: azure;
   border: 1px solid gray;
   padding: 4px;
+}
+.b-icon {
+  cursor: pointer;
 }
 </style>
