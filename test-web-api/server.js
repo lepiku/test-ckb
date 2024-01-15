@@ -3,29 +3,26 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const app = express();
-require("./routes/pengguna.routes.js")(app)
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 const db = require("./models");
 db.sequelize.sync();
 
-var corsOptions = {
-  origin: "http://localhost:5173"
-};
+// https://stackoverflow.com/a/13779626
+// You must make sure that you define all configurations BEFORE defining routes
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cors(corsOptions));
-
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-
-// parse requests of content-type - application/json
-// app.use(express.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
-// app.use(express.urlencoded({ extended: true }));
+require("./routes/pengguna.routes.js")(app);
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.json({ message: "Welcome to testCKB backend" });
 });
 
 // set port, listen for requests
