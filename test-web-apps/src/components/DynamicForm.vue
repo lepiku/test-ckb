@@ -1,6 +1,13 @@
 <script setup>
-import { BForm, BButton, BFormInput, BFormGroup } from 'bootstrap-vue'
-import { reactive } from 'vue'
+import {
+  BForm,
+  BButton,
+  BFormInput,
+  BFormGroup,
+  BFormTextarea,
+  BFormRadio
+} from 'bootstrap-vue'
+import { reactive, nextTick, ref } from 'vue'
 import { getLabel } from '@/utils'
 import $ from 'jquery'
 
@@ -8,35 +15,67 @@ const props = defineProps([
   'fields',
   'initialValues',
   'submitUrl',
-  'submitMethod',
-  'submitSuccess'
+  'submitMethod'
 ])
+const emit = defineEmits(['refetch'])
 
-const model = reactive(props.initialValues)
+const model = reactive({ ...props.initialValues })
 
-const onSubmit = () => {
-  $.ajax({
+const onSubmit = async () => {
+  await $.ajax({
     method: props.submitMethod,
     url: props.submitUrl,
-    data: model,
-    success: props.submitSuccess
+    data: model
   })
+  onReset()
+  emit('refetch')
 }
+const show = ref(true)
 const onReset = () => {
   Object.assign(model, props.initialValues)
+  show.value = false
+  nextTick(() => {
+    show.value = true
+  })
 }
 </script>
 
 <template>
-  <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" class="mb-4">
+  <b-form
+    v-if="show"
+    @submit.prevent="onSubmit"
+    @reset.prevent="onReset"
+    class="mb-4"
+  >
     <b-form-group
       v-for="field in fields"
       :key="field.name"
       :id="`input-group-${field.name}`"
       :label="getLabel(field)"
       :label-for="`input-${field.name}`"
+      v-slot="{ ariaDescribedby }"
     >
+      <b-form-textarea
+        v-if="field.type === 'textarea'"
+        :id="`input-${field.name}`"
+        v-model="model[field.name]"
+        :placeholder="`Masukkan ${getLabel(field)}`"
+        :maxlength="field.maxlength"
+        required
+      />
+      <b-form-radio
+        v-else-if="field.type === 'radio'"
+        v-for="c in field.choices"
+        :key="c"
+        v-model="model[field.name]"
+        :aria-describedby="ariaDescribedby"
+        :name="field.name"
+        :value="c"
+      >
+        {{ c }}
+      </b-form-radio>
       <b-form-input
+        v-else
         :id="`input-${field.name}`"
         v-model="model[field.name]"
         :placeholder="`Masukkan ${getLabel(field)}`"
@@ -46,6 +85,9 @@ const onReset = () => {
       />
     </b-form-group>
 
-    <b-button type="submit" variant="primary" class="mt-2">Submit</b-button>
+    <div class="my-2">
+      <b-button type="submit" variant="primary">Submit</b-button>
+      <b-button type="reset" variant="danger" class="mx-2">Reset</b-button>
+    </div>
   </b-form>
 </template>

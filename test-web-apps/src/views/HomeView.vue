@@ -6,13 +6,11 @@ import $ from 'jquery'
 import DynamicForm from '@/components/DynamicForm.vue'
 
 const data = ref([])
-const fetchData = () => {
-  $.ajax({
-    url: 'http://localhost:8080/api/pengguna/',
-    success: (result) => {
-      data.value = result
-    }
+const fetchData = async () => {
+  const result = await $.ajax({
+    url: 'http://localhost:8080/api/pengguna/'
   })
+  data.value = result
 }
 onMounted(fetchData)
 
@@ -22,7 +20,7 @@ const formProps = {
     { name: 'nama' },
     { name: 'alamat', type: 'textarea' },
     { name: 'nomor_telepon' },
-    { name: 'jenis_kelamin' }
+    { name: 'jenis_kelamin', type: 'radio', choices: ['Pria', 'Wanita'] }
   ],
   initialValues: {
     id: 0,
@@ -37,29 +35,28 @@ const formProps = {
 </script>
 
 <template>
-  <main>
+  <b-container class="py-4">
     <h1 class="mb-4">Pendaftaran</h1>
-    <div>
-      <dynamic-form v-bind="formProps" />
 
-      <b-container>
-        <b-row>
-          <b-col
-            v-for="field in formProps.fields"
-            :key="field.name"
-            class="cell text-bold"
-          >
-            {{ getLabel(field) }}
-          </b-col>
-        </b-row>
-        <b-row v-for="d in data" :key="d.id">
-          <b-col v-for="{ name } in formProps.fields" :key="name" class="cell">
-            {{ d[name] }}
-          </b-col>
-        </b-row>
-      </b-container>
-    </div>
-  </main>
+    <dynamic-form v-bind="formProps" @refetch="fetchData" />
+
+    <b-container>
+      <b-row>
+        <b-col
+          v-for="field in formProps.fields"
+          :key="field.name"
+          class="cell text-bold"
+        >
+          {{ getLabel(field) }}
+        </b-col>
+      </b-row>
+      <b-row v-for="d in data" :key="d.id">
+        <b-col v-for="{ name } in formProps.fields" :key="name" class="cell">
+          {{ d[name] }}
+        </b-col>
+      </b-row>
+    </b-container>
+  </b-container>
 </template>
 
 <style scoped>

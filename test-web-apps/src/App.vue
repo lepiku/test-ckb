@@ -1,11 +1,18 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { BNavbarBrand, BNavbar, BNavbarToggle, BCollapse, BNavbarNav, BNavItem } from 'bootstrap-vue';
+import {
+  BNavbarBrand,
+  BNavbar,
+  BNavbarToggle,
+  BCollapse,
+  BNavbarNav,
+  BNavItem
+} from 'bootstrap-vue'
 </script>
 
 <template>
-  <b-navbar toggleable="lg" type="dark" variant="info">
-    <b-navbar-brand href="#">NavBar</b-navbar-brand>
+  <b-navbar toggleable="sm" type="dark" variant="primary" class="px-3">
+    <b-navbar-brand to="/">testCKB</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 

@@ -18,6 +18,13 @@ db.sequelize.sync();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// https://stackoverflow.com/a/53240717
+// disable cache
+app.use((req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
+
 require("./routes/pengguna.routes.js")(app);
 
 // simple route
