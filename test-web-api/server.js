@@ -7,7 +7,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:5173",
-  }),
+  })
 );
 
 const db = require("./models");
@@ -25,7 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-require("./routes/pengguna.routes.js")(app);
+require("./routes")(app);
 
 // simple route
 app.get("/", (req, res) => {
