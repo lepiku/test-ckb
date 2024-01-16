@@ -2,6 +2,8 @@
 import { reactive } from 'vue'
 import { BCard, BForm, BButton, BFormInput, BFormGroup } from 'bootstrap-vue'
 import MahasiswaCard from '@/components/MahasiswaCard.vue'
+import MataKuliahCard from '@/components/MataKuliahCard.vue'
+import NilaiMahasiswaCard from '@/components/NilaiMahasiswaCard.vue'
 const formMahasiswa = reactive({
   nim: '',
   nama_mahasiswa: '',
@@ -65,45 +67,15 @@ const form = {
 <template>
   <b-container class="py-4">
     <h1 class="mb-2">Test Web Apps II</h1>
-    <div>
-      <b-card header="Mahasiswa">
-        <mahasiswa-card />
-      </b-card>
-
-      <b-card
-        v-for="f in [form.mahasiswa, form.mataKuliah, form.nilaiMahasiswa]"
-        :key="f.title"
-        :header="f.title"
-        class="m-2"
-      >
-        <b-form @submit="f.onSubmit" class="mb-4">
-          <b-form-group
-            v-for="field in f.fields"
-            :key="field.name"
-            :id="`input-group-${field.name}`"
-            :label="field.name"
-            :label-for="`input-${field.name}`"
-          >
-            <b-form-input
-              :id="`input-${field.name}`"
-              v-model="f.model[field.name]"
-              :placeholder="`Masukkan ${field.name}`"
-              :type="field.type"
-              :maxlength="field.maxlength"
-              required
-            />
-          </b-form-group>
-
-          <b-button type="submit" variant="primary" class="mt-2"
-            >Submit</b-button
-          >
-        </b-form>
-      </b-card>
-
-      <!-- <b-card class="mt-3" header="Form Data Result">
-        <pre class="m-0">{{ form }}</pre>
-      </b-card> -->
-    </div>
+    <b-card header="Mahasiswa" class="my-2">
+      <mahasiswa-card />
+    </b-card>
+    <b-card header="Mata Kuliah" class="my-2">
+      <mata-kuliah-card />
+    </b-card>
+    <b-card header="Nilai Mahasiswa" class="my-2">
+      <nilai-mahasiswa-card />
+    </b-card>
   </b-container>
 </template>
 

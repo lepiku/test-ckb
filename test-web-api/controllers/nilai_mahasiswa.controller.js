@@ -1,4 +1,7 @@
-const NilaiMahasiswa = require("../models").nilai_mahasiswa;
+const db = require("../models");
+const NilaiMahasiswa = db.nilai_mahasiswa;
+const Mahasiswa = db.mahasiswa;
+const MataKuliah = db.mata_kuliah;
 
 exports.create = async (req, res) => {
   if (!req.body) {
@@ -6,8 +9,21 @@ exports.create = async (req, res) => {
       message: "Content can not be empty!",
     });
     return;
-  }
-  if (
+  } else if (!(await Mahasiswa.findOne({ where: { nim: req.body.nim } }))) {
+    res.status(400).send({
+      message: "Mahasiswa dengan NIM tsb tidak ada",
+    });
+    return;
+  } else if (
+    !(await MataKuliah.findOne({
+      where: { kode_mata_kuliah: req.body.kode_mata_kuliah },
+    }))
+  ) {
+    res.status(400).send({
+      message: "Matkul dengan kode tsb tidak ada",
+    });
+    return;
+  } else if (
     await NilaiMahasiswa.findOne({
       where: {
         kode_mata_kuliah: req.body.kode_mata_kuliah,
