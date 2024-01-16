@@ -1,6 +1,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { BCard, BForm, BButton, BFormInput, BFormGroup } from 'bootstrap-vue'
+import MahasiswaCard from '@/components/MahasiswaCard.vue'
 const formMahasiswa = reactive({
   nim: '',
   nama_mahasiswa: '',
@@ -62,9 +63,13 @@ const form = {
 </script>
 
 <template>
-  <main>
-    <h1 class="mb-4">Test Web Apps II</h1>
+  <b-container class="py-4">
+    <h1 class="mb-2">Test Web Apps II</h1>
     <div>
+      <b-card header="Mahasiswa">
+        <mahasiswa-card />
+      </b-card>
+
       <b-card
         v-for="f in [form.mahasiswa, form.mataKuliah, form.nilaiMahasiswa]"
         :key="f.title"
@@ -99,7 +104,7 @@ const form = {
         <pre class="m-0">{{ form }}</pre>
       </b-card> -->
     </div>
-  </main>
+  </b-container>
 </template>
 
 <style scoped></style>
